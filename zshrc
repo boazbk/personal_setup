@@ -30,14 +30,15 @@ if ! zgen saved; then
 
     # the gist has a couple things scavenged from ohmyzsh
     zgen load https://gist.github.com/528dc0693e8dfacdfdc0cef6bd7f844b.git
-    # git aliases
-    zgen load hauntsaninja/my_git_aliases
+    # git aliases - too advanced for me (Boaz)
+    #zgen load hauntsaninja/my_git_aliases
 
     # fzf for everything
     zgen load junegunn/fzf shell
     zgen load Aloxaf/fzf-tab
 
-    zgen load docker/cli contrib/completion/zsh
+
+    #zgen load docker/cli contrib/completion/zsh
 
     # use z to cd to recently used directories
     zgen load rupa/z
@@ -214,19 +215,19 @@ frgc() (
     rg --color ansi --vimgrep $@ | fzf --ansi --preview '~/.local/bin/preview.sh {}' | pyp 'shlex.quote(":".join(x.split(":")[:3]))' | xargs -o code --goto
 )
 
-# ripgrep aliases
+# # ripgrep aliases
 alias rg='rg -M 250 -S'     # limit max columns, use smart case
-alias rgh='rg --hidden'     # search hidden files
-alias rgs='rg --sort path'  # sort results by path, slower
-alias rgc='rg -t c -t cpp'
-alias rgp='rg -t py'
-alias rgj='rg -t js -t ts'
+# alias rgh='rg --hidden'     # search hidden files
+# alias rgs='rg --sort path'  # sort results by path, slower
+# alias rgc='rg -t c -t cpp'
+# alias rgp='rg -t py'
+# alias rgj='rg -t js -t ts'
 
 # ==========
 # Misc
 # ==========
 
-export EDITOR=vim
+export EDITOR=nano
 export PAGER=less
 export LESS=-R              # deals with colours better
 
@@ -235,14 +236,6 @@ setopt interactivecomments  # recognise comments
 setopt multios              # something to do with redirection?
 CORRECT_IGNORE_FILE='.*|*test*'  # ignore corrections for files matching these globs
 
-function google() {
-    if [[ $# -gt 0 ]]; then
-        url="https://www.google.com/search?q=${(j:+:)@}"
-    else
-        url="https://www.google.com/"
-    fi
-    open "$url"
-}
 
 export PATH="${HOME}/.local/bin:${HOME}/.pyenv/bin:${PATH}"
 
@@ -250,5 +243,57 @@ export PATH="${HOME}/.local/bin:${HOME}/.pyenv/bin:${PATH}"
 if [ -f "$HOME/.zshrc_local" ]; then
   source "$HOME/.zshrc_local"
 fi
+
+###########################
+# Boaz specic additions
+
+
+
+export GREENSTART='\033[32m'
+export GREENEND='\033[0m'
+export REDSTART='\033[31m'
+export REDEND='\033[0m'
+
+
+# Check if the directory "~/code/boazpersonal/scripts" exists
+if [[ -d "$HOME/code/boazpersonal/scripts" ]]; then
+    echo "Directory $HOME/code/boazpersonal/scripts found."
+    export SCRIPTS="$HOME/code/boazpersonal/scripts"
+    export PATH="$SCRIPTS:$PATH"
+else
+    echo "Directory $HOME/code/boazpersonal/scripts not found."
+    export SCRIPTS="$HOME/scripts"
+fi
+
+# ffuuuuu
+if which thefuck &>/dev/null; then
+  eval "$(thefuck --alias fu)"
+fi
+
+alias ls='ls -lhA --color=auto'
+alias lso='/bin/ls'
+
+
+# Source environment specific files 
+
+# Get a list of .zshrc-X files
+zshrc_files=($(ls $HOME/.zshrc-* 2> /dev/null))
+
+# Check if the array is empty
+if [ ${#zshrc_files[@]} -eq 0 ]; then
+    echo "No .zshrc-X files found in $HOME."
+    exit
+fi
+
+# Iterate over the files and source them
+for file in "${zshrc_files[@]}"; do
+    echo "Sourcing $file..."
+    source "$file"
+done
+
+
+
+
+###########################
 
 echo "$SECONDS seconds"

@@ -114,16 +114,17 @@ def zsh():
     """
 
 
-@collect
-@sh()
-def vim():
-    return """
-    [[ ! -f ~/.vimrc ]] || diff vimrc ~/.vimrc
-    cp vimrc ~/.vimrc
-    curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    rm -rf ~/.vim/.swp
-    mkdir ~/.vim/.swp
-    """
+# The day will come when I will learn vim, but today is not that day.
+# @collect
+# @sh()
+# def vim():
+#     return """
+#     [[ ! -f ~/.vimrc ]] || diff vimrc ~/.vimrc
+#     cp vimrc ~/.vimrc
+#     curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#     rm -rf ~/.vim/.swp
+#     mkdir ~/.vim/.swp
+#     """
 
 
 @collect
@@ -181,12 +182,13 @@ def provisional_brew_stuff():
     """
 
 
+# Hammerspoon seems awesome, but not just yet for me
 @collect
 @skip_if_fail("which brew")
 @sh()
 def brew_casks():
     return """
-    brew install --cask hammerspoon  # automate your mac
+    # brew install --cask hammerspoon  # automate your mac
 
     brew install --cask basictex
 
@@ -222,16 +224,16 @@ def vscode_extensions():
     code --install-extension usernamehw.errorlens
     """
 
-@collect
-@skip_if_fail("brew list --cask | grep hammerspoon")
-@sh()
-def hammerspoon_config():
-    return """
-    [[ ! -f ~/.hammerspoon/init.lua ]] || diff hammerspoon.lua ~/.hammerspoon/init.lua
-    rm -rf ~/.hammerspoon
-    mkdir ~/.hammerspoon
-    cp hammerspoon.lua ~/.hammerspoon/init.lua
-    """
+# @collect
+# @skip_if_fail("brew list --cask | grep hammerspoon")
+# @sh()
+# def hammerspoon_config():
+#     return """
+#     [[ ! -f ~/.hammerspoon/init.lua ]] || diff hammerspoon.lua ~/.hammerspoon/init.lua
+#     rm -rf ~/.hammerspoon
+#     mkdir ~/.hammerspoon
+#     cp hammerspoon.lua ~/.hammerspoon/init.lua
+#     """
 
 
 @collect

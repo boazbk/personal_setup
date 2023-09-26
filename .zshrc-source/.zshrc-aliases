@@ -1,0 +1,169 @@
+##############################
+# from completion.zsh
+##############################
+# fixme - the load process here seems a bit bizarre
+#zmodload -i zsh/complist
+
+unsetopt menu_complete   # do not autoselect the first completion entry
+unsetopt flowcontrol
+setopt auto_menu         # show completion menu on successive tab press
+setopt complete_in_word
+setopt always_to_end
+
+#zstyle ':completion:*:*:*:*:*' menu select
+
+# Case insensitive (all), partial-word, then substring completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+zstyle ':completion:*' list-colors ''
+
+# Directories
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+
+# Use caching so that commands like apt and dpkg complete are useable
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path /tmp/zsh_cache
+
+# ... unless we really want to.
+zstyle '*' single-ignored show
+
+# automatically load bash completion functions
+autoload -U +X bashcompinit && bashcompinit
+##############################
+
+
+
+
+
+
+
+
+##############################
+# from key-bindings.zsh
+##############################
+# http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html
+# http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html#Zle-Builtins
+# http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html#Standard-Widgets
+
+# Make sure that the terminal is in application mode when zle is active, since
+# only then values from $terminfo are valid
+if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+  function zle-line-init() {
+    echoti smkx
+  }
+  function zle-line-finish() {
+    echoti rmkx
+  }
+  zle -N zle-line-init
+  zle -N zle-line-finish
+fi
+
+#bindkey -e                                            # Use emacs key bindings
+
+#bindkey ' ' magic-space                               # [Space] - do history expansion
+
+# if [[ "${terminfo[kcbt]}" != "" ]]; then
+#   bindkey "${terminfo[kcbt]}" reverse-menu-complete   # [Shift-Tab] - move through the completion menu backwards
+# fi
+
+# bindkey '^?' backward-delete-char                     # [Backspace] - delete backward
+# if [[ "${terminfo[kdch1]}" != "" ]]; then
+#   bindkey "${terminfo[kdch1]}" delete-char            # [Delete] - delete forward
+# fi
+
+# # Edit the current command line in $EDITOR
+# autoload -U edit-command-line
+# zle -N edit-command-line
+# bindkey '\C-x\C-e' edit-command-line
+
+# ##############################
+
+
+
+
+##############################
+# from osx.plugin.zsh
+##############################
+if [[ "$OSTYPE" == "darwin"* ]]; then
+
+function pwdf() {
+  osascript 2>/dev/null <<EOF
+    tell application "Finder"
+      return POSIX path of (target of window 1 as alias)
+    end tell
+EOF
+}
+
+function lsf() {
+  osascript 2>/dev/null <<EOF
+    set output to ""
+    tell application "Finder" to set the_selection to selection
+    set item_count to count the_selection
+    repeat with item_index from 1 to count the_selection
+      if item_index is less than item_count then set the_delimiter to "\n"
+      if item_index is item_count then set the_delimiter to ""
+      set output to output & ((item item_index of the_selection as alias)'s POSIX path) & the_delimiter
+    end repeat
+EOF
+}
+
+function cdf() {
+  cd "$(pwdf)"
+}
+
+function quick-look() {
+  (( $# > 0 )) && qlmanage -p $* &>/dev/null &
+}
+
+# Show/hide hidden files in the Finder
+alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+
+
+fi
+##############################
+
+
+
+
+
+
+
+
+##############################
+# from functions.zsh
+##############################
+function zsh_stats() {
+  fc -l 1 | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl |  head -n20
+}
+
+function take() {
+  mkdir -p $@ && cd ${@:$#}
+}
+
+function open() {
+  local open_cmd
+
+  # define the open command
+  case "$OSTYPE" in
+    darwin*)  open_cmd='open' ;;
+    cygwin*)  open_cmd='cygstart' ;;
+    linux*)   [[ "$(uname -r)" != *icrosoft* ]] && open_cmd='nohup xdg-open' || {
+                open_cmd='cmd.exe /c start ""'
+                [[ -e "$1" ]] && { 1="$(wslpath -w "${1:a}")" || return 1 }
+              } ;;
+    msys*)    open_cmd='start ""' ;;
+    *)        echo "Platform $OSTYPE not supported"
+              return 1
+              ;;
+  esac
+
+  command ${=open_cmd} "$@" &>/dev/null
+}
+
+zmodload zsh/langinfo  # sets $langinfo
+##############################
