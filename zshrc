@@ -1,3 +1,6 @@
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -78,7 +81,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git sh-autosuggestions)
+plugins=(git zsh-autosuggestions)
 #plugins=(autoswitch_virtualenv $plugins)
 
 source $ZSH/oh-my-zsh.sh
@@ -115,7 +118,6 @@ alias .....="cd ../../../.."
 
 
 ######
-Options 
 setopt pushd_ignore_dups  # don't push directory if it's already on the stack
 setopt pushdminus         # use - instead of + for specifying a directory in the stack
 setopt always_to_end          # When completing a word, move the cursor to the end of the word
@@ -313,3 +315,4 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
