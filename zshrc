@@ -1,109 +1,109 @@
-#!/bin/zsh
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
-typeset -F 3 SECONDS=0
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git sh-autosuggestions)
+#plugins=(autoswitch_virtualenv $plugins)
+
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+
+export VISUAL='nano'
+export EDITOR='nano'
+
+
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
 
 autoload -U compinit
 compinit -i -C
 
-# load zgen
-source "${HOME}/.zgen/zgen.zsh"
 
-
-function file_mtime() {
-  local cmd
-  case "$OSTYPE" in
-    darwin*)  stat -f '%m' $1 ;;
-    linux*)   date +%s -r $1 ;;
-  esac
-}
-
-# automatically update things every now and then
-if zgen saved && [[ $(( $(date +%s) - $(file_mtime ~/.zgen/init.zsh) )) -gt 1000000 ]]; then
-    touch ~/.zgen/init.zsh
-    { brew update; brew upgrade; brew cleanup; } &
-    pipx upgrade-all &
-    zgen selfupdate; zgen update;
-fi
-
-# if the init scipt doesn't exist
-if ! zgen saved; then
-
-    # the gist has a couple things scavenged from ohmyzsh
-    zgen load https://gist.github.com/528dc0693e8dfacdfdc0cef6bd7f844b.git
-    # git aliases - too advanced for me (Boaz)
-    #zgen load hauntsaninja/my_git_aliases
-
-    # fzf for everything
-    zgen load junegunn/fzf shell
-    zgen load Aloxaf/fzf-tab
-
-
-    #zgen load docker/cli contrib/completion/zsh
-
-    # use z to cd to recently used directories
-    zgen load rupa/z
-    # suggest use of defined aliases
-    zgen load djui/alias-tips
-    # cd upwards in the directory tree
-    zgen load shannonmoeller/up
-
-    # nice, but can't group notifs, bug in removing failure notifs, bad default titles
-    # zgen load marzocchi/zsh-notify
-
-    zgen load MichaelAquilina/zsh-autoswitch-virtualenv
-
-    # provide suggestions as you type
-    zgen load zsh-users/zsh-autosuggestions
-
-    # order matters for the next two
-    zgen load zsh-users/zsh-syntax-highlighting  # should be last
-    # press up and down to fuzzy search history for your partial command
-    zgen load zsh-users/zsh-history-substring-search  # except for this
-
-    # generate the init script from plugins above
-    zgen save
-fi
-
-# ==========
-# Plugin config
-# ==========
-
-# history substring search
-HISTORY_SUBSTRING_SEARCH_FUZZY='yes'
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=11,fg=black,bold'
-bindkey "${terminfo[kcuu1]}" history-substring-search-up
-bindkey "${terminfo[kcud1]}" history-substring-search-down
-
-# syntax highlighting
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
-ZSH_HIGHLIGHT_PATTERNS+=('rm *' 'fg=9')
-ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='underline'
-ZSH_HIGHLIGHT_STYLES[alias]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[builtin]='none'
-ZSH_HIGHLIGHT_STYLES[command]='none'
-ZSH_HIGHLIGHT_STYLES[hashed-command]='none'
-ZSH_HIGHLIGHT_STYLES[precommand]='none'
-ZSH_HIGHLIGHT_STYLES[redirection]='bold'
-
-# fzf config
-export FZF_DEFAULT_COMMAND="find . -type f -not -path '*/\.git/*'"
-
-_fzf_compgen_path() {
-  find $1 -type f -not -path '*/\.git/*'
-}
-
-_fzf_compgen_dir() {
-  find $1 -type d -not -path '*/\.git/*'
-}
-
-# fuzzy vim
-alias fvim='vim $(fzf)'
-
-# fuzzy ps
-case "$OSTYPE" in
-  darwin*)  alias fps='ps -e -o "pid %cpu %mem args" -m | fzf  --header-lines=1 | pyp "x.strip().split()[0]"' ;;
-  linux*)   alias fps='ps -e -o "pid %cpu %mem comm args" --sort rss | fzf  --header-lines=1 --tac | pyp "x.strip().split()[0]"' ;;
-esac
 
 # ==========
 # Directory
@@ -113,18 +113,45 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
-case "$OSTYPE" in
-  darwin*)  alias ls='ls -G' ;;
-  linux*)   alias ls='ls --color=tty' ;;
-esac
-alias ll='ls -lah'
-alias lt='ls -latrh'
 
-setopt auto_cd            # use directory name to cd
-setopt auto_pushd         # cd adds directory to the stack
+######
+Options 
 setopt pushd_ignore_dups  # don't push directory if it's already on the stack
 setopt pushdminus         # use - instead of + for specifying a directory in the stack
+setopt always_to_end          # When completing a word, move the cursor to the end of the word
+setopt append_history         # this is default, but set for share_history
+setopt auto_cd                # cd by typing directory name if it's not a command
+setopt auto_list              # automatically list choices on ambiguous completion
+setopt auto_menu              # automatically use menu completion
+setopt auto_pushd             # Make cd push each old directory onto the stack
+setopt completeinword         # If unset, the cursor is set to the end of the word
+setopt correct_all            # autocorrect commands
+setopt extended_glob          # treat #, ~, and ^ as part of patterns for filename generation
+setopt extended_history       # save each command's beginning timestamp and duration to the history file
+setopt glob_dots              # dot files included in regular globs
+setopt hash_list_all          # when command completion is attempted, ensure the entire  path is hashed
+setopt hist_expire_dups_first # # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_find_no_dups      # When searching history don't show results already cycled through twice
+setopt hist_ignore_dups       # Do not write events to history that are duplicates of previous events
+setopt hist_ignore_space      # remove command line from history list when first character is a space
+setopt hist_reduce_blanks     # remove superfluous blanks from history items
+setopt hist_verify            # show command with history expansion to user before running it
+setopt histignorespace        # remove commands from the history when the first character is a space
+setopt inc_append_history     # save history entries as soon as they are entered
+setopt interactivecomments    # allow use of comments in interactive code (bash-style comments)
+setopt longlistjobs           # display PID when suspending processes as well
+setopt no_beep                # silence all bells and beeps
+setopt nocaseglob             # global substitution is case insensitive
+setopt nonomatch              ## try to avoid the 'zsh: no matches found...'
+setopt noshwordsplit          # use zsh style word splitting
+setopt notify                 # report the status of backgrounds jobs immediately
+setopt numeric_glob_sort      # globs sorted numerically
+setopt prompt_subst           # allow expansion in prompts
+setopt pushd_ignore_dups      # Don't push duplicates onto the stack
+setopt share_history          # share history between different instances of the shell
+HISTFILE=${HOME}/.zsh_history
+HISTSIZE=100000
+SAVEHIST=${HISTSIZE}
 
 alias -- -='cd -'
 alias 1='cd -'
@@ -133,18 +160,6 @@ alias 3='cd -3'
 alias 4='cd -4'
 alias 5='cd -5'
 
-function d () {
-  if [[ -n $1 ]]; then
-    dirs "$@"
-  else
-    dirs -v | head -10
-  fi
-}
-
-# fuzzy z
-fz() {
-    cd $(z | pyp 'x.split()[1]' | fzf --tac $([[ -z "$1" ]] && echo "" || echo "--query $@") || pwd)
-}
 
 # ==========
 # History
@@ -161,98 +176,73 @@ setopt hist_ignore_space       # don't add commands that start with space to his
 setopt hist_verify             # show command with history expansion before running it
 setopt share_history           # share history between shells
 
-# full screen fuzzy history search bound to ctrl-r
-_fhist () {
-    [ -n "$BUFFER" ] && BUFFER="${BUFFER%% ##} "
-    LINE="$(history 0 | fzf -q "$BUFFER" --tac --tiebreak=index | pyp 'x.lstrip().split(maxsplit=1)[1]')"
 
-    zle redisplay
-    zle kill-buffer
-    BUFFER="$LINE"
-    CURSOR=${#BUFFER}
-
-    region_highlight=()
-    _zsh_highlight
-}
-zle -N _fhist
-bindkey '^r' _fhist
-
-# ==========
-# Prompt
-# ==========
-
-setopt prompt_subst  # makes prompts dynamic
-
-function _git_current_branch() {
-    local ref
-    ref=$(git symbolic-ref --short HEAD 2> /dev/null)
-    local ret=$?
-    if [[ $ret != 0 ]]; then
-        ref=$(git rev-parse --short HEAD 2> /dev/null) || return
-    fi
-    echo -n $ref && echo ' '
-}
-
-RPROMPT="%B%(?::%F{red}%? %f)%b"  # exit code to the right
-PROMPT="$([ -z $SSH_CLIENT ] || echo '%F{blue}%n@%m:%f')$([ -z $STY ] || echo '%F{blue}screen:%f')%F{cyan}%-50<..<%~%f%F{8} \$(_git_current_branch)%fλ "
-
-# maybe look into romkatv/powerlevel10k (or possibly sindresorhus/pure)
-
-# ==========
-# Ripgrep
-# ==========
-
-# fuzzy ripgrep
-# needs curl -fLo ~/.local/bin/preview.sh https://raw.githubusercontent.com/junegunn/fzf.vim/2bf85d25e203a536edb2c072c0d41b29e8e4cc1b/bin/preview.sh
-export BAT_THEME=GitHub
-frg() (
-    set -o pipefail
-    rg --color ansi --vimgrep $@ | fzf --ansi --preview '~/.local/bin/preview.sh {}' | pyp 'z = x.split(":"); print(f"+{z[1]} -c \"normal {z[2]}|\" {shlex.quote(z[0])}")' | xargs -o vim
-)
-
-frgc() (
-    set -o pipefail
-    rg --color ansi --vimgrep $@ | fzf --ansi --preview '~/.local/bin/preview.sh {}' | pyp 'shlex.quote(":".join(x.split(":")[:3]))' | xargs -o code --goto
-)
-
-# # ripgrep aliases
-alias rg='rg -M 250 -S'     # limit max columns, use smart case
-# alias rgh='rg --hidden'     # search hidden files
-# alias rgs='rg --sort path'  # sort results by path, slower
-# alias rgc='rg -t c -t cpp'
-# alias rgp='rg -t py'
-# alias rgj='rg -t js -t ts'
-
-# ==========
-# Misc
-# ==========
-
-export EDITOR=nano
-export PAGER=less
-export LESS=-R              # deals with colours better
-
-setopt correct_all          # adds corrections
-setopt interactivecomments  # recognise comments
-setopt multios              # something to do with redirection?
-CORRECT_IGNORE_FILE='.*|*test*'  # ignore corrections for files matching these globs
-
-
-export PATH="${HOME}/.local/bin:${HOME}/.pyenv/bin:${PATH}"
 
 # put machine specific things in zshrc_local
 if [ -f "$HOME/.zshrc_local" ]; then
   source "$HOME/.zshrc_local"
 fi
 
-###########################
-# Boaz specic additions
 
+###############################################
+# Extra MacOS stuff from Hauntsaninja
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+
+function pwdf() {
+  osascript 2>/dev/null <<EOF
+    tell application "Finder"
+      return POSIX path of (target of window 1 as alias)
+    end tell
+EOF
+}
+
+function lsf() {
+  osascript 2>/dev/null <<EOF
+    set output to ""
+    tell application "Finder" to set the_selection to selection
+    set item_count to count the_selection
+    repeat with item_index from 1 to count the_selection
+      if item_index is less than item_count then set the_delimiter to "\n"
+      if item_index is item_count then set the_delimiter to ""
+      set output to output & ((item item_index of the_selection as alias)'s POSIX path) & the_delimiter
+    end repeat
+EOF
+}
+
+function cdf() {
+  cd "$(pwdf)"
+}
+
+function quick-look() {
+  (( $# > 0 )) && qlmanage -p $* &>/dev/null &
+}
+
+# Show/hide hidden files in the Finder
+alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+
+
+fi
+##############################
+
+
+
+################
+# Boaz specific additions
 
 
 export GREENSTART='\033[32m'
 export GREENEND='\033[0m'
 export REDSTART='\033[31m'
 export REDEND='\033[0m'
+export PATH=/opt/homebrew/bin:$PATH
+export SCRIPTS=$HOME/code/boazpersonal/scripts
+export PATH=$PATH:$SCRIPTS
+
 
 
 # Check if the directory "~/code/boazpersonal/scripts" exists
@@ -265,35 +255,61 @@ else
     export SCRIPTS="$HOME/scripts"
 fi
 
-# ffuuuuu
-if which thefuck &>/dev/null; then
-  eval "$(thefuck --alias fu)"
-fi
 
-alias ls='ls -lhA --color=auto'
 alias lso='/bin/ls'
 
+# from https://github.com/natelandau/dotfiles
 
-# Source environment specific files 
-
-# Get a list of .zshrc-X files
-zshrc_files=($(ls $HOME/.zshrc-* 2> /dev/null))
-
-# Check if the array is empty
-if [ ${#zshrc_files[@]} -eq 0 ]; then
-    echo "No .zshrc-X files found in $HOME."
-    exit
+if eza --icons &>/dev/null; then
+    alias ls='eza --git --icons'                             # system: List filenames on one line
+    alias l='eza --git --icons -lF'                          # system: List filenames with long format
+    alias ll='eza -lahF --git'                               # system: List all files
+    alias lll="eza -1F --git --icons"                        # system: List files with one line per file
+    alias llm='ll --sort=modified'                           # system: List files by last modified date
+    alias la='eza -lbhHigUmuSa --color-scale --git --icons'  # system: List files with attributes
+    alias lx='eza -lbhHigUmuSa@ --color-scale --git --icons' # system: List files with extended attributes
+    alias lt='eza --tree --level=2'                          # system: List files in a tree view
+    alias llt='eza -lahF --tree --level=2'                   # system: List files in a tree view with long format
+    alias ltt='eza -lahF | grep "$(date +"%d %b")"'          # system: List files modified today
+elif command -v eza &>/dev/null; then
+    alias ls='eza --git'
+    alias l='eza --git -lF'
+    alias ll='eza -lahF --git'
+    alias lll="eza -1F --git"
+    alias llm='ll --sort=modified'
+    alias la='eza -lbhHigUmuSa --color-scale --git'
+    alias lx='eza -lbhHigUmuSa@ --color-scale --git'
+    alias lt='eza --tree --level=2'
+    alias llt='eza -lahF --tree --level=2'
+    alias ltt='eza -lahF | grep "$(date +"%d %b")"'
+elif command -v colorls &>/dev/null; then
+    alias ll="colorls -1A --git-status"
+    alias ls="colorls -A"
+    alias ltt='colorls -A | grep "$(date +"%d %b")"'
+elif [[ $(command -v ls) =~ gnubin || $OSTYPE =~ linux ]]; then
+    alias ls="ls --color=auto"
+    alias ll='ls -FlAhpv --color=auto'
+    alias ltt='ls -FlAhpv| grep "$(date +"%d %b")"'
+else
+    alias ls="ls -G"
+    alias ll='ls -FGlAhpv'
+    alias ltt='ls -FlAhpv| grep "$(date +"%d %b")"'
 fi
 
-# Iterate over the files and source them
-for file in "${zshrc_files[@]}"; do
-    echo "Sourcing $file..."
+# Source environment specific files 
+# Directory containing the files
+# Directory containing the files
+DIR="$HOME/zshrc-source"
+
+# Check if the directory exists
+if [[ -d $DIR ]]; then
+  # Loop through each file including hidden files in the directory
+  for file in "${DIR}"/*(.D); do
+    # Source it
+    echo "Sourcing $file"
     source "$file"
-done
+  done
+fi
 
-
-
-
-###########################
-
-echo "$SECONDS seconds"
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
