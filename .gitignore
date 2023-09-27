@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Xcode
+*.xcuserstate
+project.xcworkspace/
+
+# Swift
+.DS_Store
+.build/
+DerivedData/
+.idea/
+*.pbxuser
+*.xccheckout
+*.swiftpm
+
+# CocoaPods
+Pods/
+*.lock

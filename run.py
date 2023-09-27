@@ -105,12 +105,10 @@ def zsh():
     return """
     [[ ! -f ~/.zshrc ]] || diff zshrc ~/.zshrc
     cp zshrc ~/.zshrc
-    # zsh -c 'compaudit | xargs chmod g-w'
-    rm -rf ~/.zgen
-    git clone https://github.com/tarjoilija/zgen.git ~/.zgen
-    zsh -i -c ''
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone https://github.com/zsh-users/zsh-autosuggestions git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     [[ $SHELL = "$(which zsh)" ]] || chsh -s $(which zsh)
-    touch ~/.z
     """
 
 
