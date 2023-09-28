@@ -260,6 +260,13 @@ fi
 
 alias lso='/bin/ls'
 
+# Check if 'bat' command exists
+if command -v bat > /dev/null 2>&1; then
+  # If it exists, alias 'cat' to 'bat'
+  alias cat='bat'
+fi
+
+
 # from https://github.com/natelandau/dotfiles
 
 if eza --icons &>/dev/null; then
