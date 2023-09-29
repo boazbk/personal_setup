@@ -18,7 +18,3 @@ cp init.vim ~/.config/nvim/init.vim
 
 # Install plugins
 nvim +PlugInstall +qall
-
-# Install fzf
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install
