@@ -41,6 +41,43 @@ install_thef() {
     brew install thefuck || pip install thefuck --user
 }
 
+install_neovim() {
+  # Detect the OS
+  local OS="$(uname)"
+
+  install_on_mac() {
+    # Check if Homebrew is installed
+    command -v brew >/dev/null 2>&1 || { 
+      echo >&2 "Homebrew is not installed. Installing now...";
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    }
+
+    # Install Neovim using Homebrew
+    brew install neovim
+  }
+
+  install_on_ubuntu() {
+    # Add the Neovim PPA
+    sudo add-apt-repository ppa:neovim-ppa/unstable -y
+
+    # Update the package list
+    sudo apt update
+    
+    # Install Neovim
+    sudo apt install neovim -y
+  }
+
+  # Install Neovim based on the OS
+  if [ "$OS" == "Darwin" ]; then
+    install_on_mac
+  elif [ "$OS" == "Linux" ]; then
+    # Assuming Ubuntu here, modify as needed for other Linux distributions
+    install_on_ubuntu
+  else
+    echo "Unsupported operating system: $OS"
+    exit 1
+  fi
+}
 
 # Function to install htop
 install_htop() {
@@ -67,4 +104,5 @@ install_powerlevel10k
 install_fzf
 install_bat
 install_htop
+install_neovim
 
