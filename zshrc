@@ -1,3 +1,19 @@
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    arch=$(uname -m)
+    if [[ "$arch" == "x86_64" ]]; then
+        # Assuming Homebrew is installed in the standard location for x86_64
+        echo "[on x86_64] Setting up Homebrew"
+        eval $(/usr/local/bin/brew shellenv)
+    elif [[ "$arch" == "arm64" ]]; then
+        # Assuming Homebrew is installed in the standard location for ARM64
+        echo "[on arm64] Setting up Homebrew"
+        eval $(/opt/homebrew/bin/brew shellenv)
+    else
+        echo "Unrecognized architecture: $arch"
+    fi
+fi
+
+
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
 
@@ -241,9 +257,6 @@ export GREENSTART='\033[32m'
 export GREENEND='\033[0m'
 export REDSTART='\033[31m'
 export REDEND='\033[0m'
-export PATH=/opt/homebrew/bin:$PATH
-export SCRIPTS=$HOME/code/boazpersonal/scripts
-export PATH=$PATH:$SCRIPTS
 
 
 
