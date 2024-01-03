@@ -318,7 +318,7 @@ else
     alias ltt='ls -FlAhpv| grep "$(date +"%d %b")"'
 fi
 
-# Source environment specific files 
+# Source environment specific files
 # Directory containing the files
 # Directory containing the files
 DIR="$HOME/zshrc-source"
@@ -335,4 +335,3 @@ fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
