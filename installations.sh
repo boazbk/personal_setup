@@ -23,15 +23,20 @@ install_eza() {
     local OS="$(uname)"
     install_eza_on_mac(){
         command -v eza >/dev/null 2>&1 && { echo "eza is already installed"; return; }
-        command -v brew >/dev/null 2>&1 || { 
+        command -v brew >/dev/null 2>&1 || {
           echo >&2 "Homebrew is not installed. Installing now...";
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         }
-        brew install neovim
+        brew install eza
     }
     install_eza_on_ubuntu(){
         command -v eza >/dev/null 2>&1 && { echo "eza is already installed"; return; }
-        # the rest of the install steps
+        sudo mkdir -p /etc/apt/keyrings
+        wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+        sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+        sudo apt update
+        sudo apt install -y eza
     }
 
     if [ "$OS" == "Darwin" ]; then install_eza_on_mac
@@ -41,11 +46,18 @@ install_eza() {
 }
 
 # Function to install thefuck
+# Function to install thefuck
 install_thefuck() {
     command -v thefuck >/dev/null 2>&1 && { echo "thefuck is already installed"; return; }
     local OS="$(uname)"
-    # the rest of the install steps
+    if [ "$OS" = "Linux" ]; then
+        sudo apt-get update && sudo apt-get install -y python3-dev python3-pip python3-setuptools
+        sudo pip3 install thefuck
+    elif [ "$OS" = "Darwin" ]; then
+        brew install thefuck
+    fi
 }
+
 
 # Function to install powerlevel10k
 install_powerlevel10k() {
@@ -57,29 +69,46 @@ install_powerlevel10k() {
 install_neovim() {
     command -v nvim >/dev/null 2>&1 && { echo "neovim is already installed"; return; }
     local OS="$(uname)"
-    # the rest of the install steps
+    if [ "$OS" = "Linux" ]; then
+        sudo apt install neovim
+    elif [ "$OS" = "Darwin" ]; then
+        brew install neovim
+    fi
 }
 
 # Function to install fzf
 install_fzf() {
     command -v fzf >/dev/null 2>&1 && { echo "fzf is already installed"; return; }
     local OS="$(uname)"
-    # the rest of the install steps
+    if [ "$OS" = "Linux" ]; then
+        sudo apt-get update && sudo apt-get install -y fzf
+    elif [ "$OS" = "Darwin" ]; then
+        brew install fzf
+    fi
 }
 
 # Function to install bat
 install_bat() {
     command -v bat >/dev/null 2>&1 && { echo "bat is already installed"; return; }
     local OS="$(uname)"
-    # the rest of the install steps
+    if [ "$OS" = "Linux" ]; then
+        sudo apt-get update && sudo apt-get install -y bat
+    elif [ "$OS" = "Darwin" ]; then
+        brew install bat
+    fi
 }
 
 # Function to install htop
 install_htop() {
     command -v htop >/dev/null 2>&1 && { echo "htop is already installed"; return; }
     local OS="$(uname)"
-    # the rest of the install steps
+    if [ "$OS" = "Linux" ]; then
+        sudo apt-get update && sudo apt-get install -y htop
+    elif [ "$OS" = "Darwin" ]; then
+        brew install htop
+    fi
 }
+
 
 # Calls to installation functions
 echo "Installing oh my zsh"
