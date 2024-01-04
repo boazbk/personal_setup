@@ -31,6 +31,8 @@ install_eza() {
     }
     install_eza_on_ubuntu(){
         command -v eza >/dev/null 2>&1 && { echo "eza is already installed"; return; }
+        sudo apt update
+        sudo apt install -y gpg
         sudo mkdir -p /etc/apt/keyrings
         wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
         echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
