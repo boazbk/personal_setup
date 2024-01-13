@@ -76,6 +76,8 @@ install_neovim() {
     elif [ "$OS" = "Darwin" ]; then
         brew install neovim
     fi
+    cd ~/code/personal_setup
+    ./customize_nvim.sh
 }
 
 # Function to install fzf
