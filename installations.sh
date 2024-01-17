@@ -119,8 +119,6 @@ echo "Installing oh my zsh"
 install_oh_my_zsh
 echo "Installing zsh autocompletion"
 install_zsh_autocompletion
-echo "Installing eza"
-install_eza
 echo "Installing powerlevel10k"
 install_powerlevel10k
 echo "Installing fzf"
@@ -133,3 +131,5 @@ echo "installing neovim"
 install_neovim
 echo "installing thef"
 install_thefuck
+echo "Installing eza"
+install_eza
