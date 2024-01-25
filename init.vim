@@ -26,4 +26,3 @@ nnoremap <C-p> :FZF<CR>
 
 filetype plugin indent on
 set termguicolors
-~
